@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
+import { HiMinus } from "react-icons/hi2";
+import IconButton from "./components/IconButton";
+import TodoInput from "./components/TodoInput";
+
+interface TodoTypes {
+  id: number;
+  text: string;
+  checked: boolean;
+}
 
 interface Props {
-  todo: any;
-  onChange?: any;
-  onRemove?: any;
-  newText?: any;
-  setNewText?: any;
-  onChangeEditInput?: any;
+  todo: TodoTypes;
+  onChange: any;
+  onRemove: any;
+  newText: any;
+  setNewText: any;
+  onChangeEditInput: any;
 }
 
 const TodoListItem = ({
@@ -19,7 +29,7 @@ const TodoListItem = ({
   setNewText,
   onChangeEditInput,
 }: Props) => {
-  const { id, text, checked } = todo;
+  const { id, text, checked }: TodoTypes = todo;
 
   const [edit, setEdit] = useState(false);
 
@@ -44,8 +54,22 @@ const TodoListItem = ({
               <MdCheckBoxOutlineBlank size="28" />
             )}
           </IconButton>
+          {edit ? (
+            <TodoInput onChange={onChangeEditInput} value={newText} />
+          ) : (
+            <Text style={{ marginLeft: "8px" }} checked={checked}>
+              {text}
+            </Text>
+          )}
         </Wrapper>
-        <Wrapper></Wrapper>
+        <Wrapper>
+          <TextButton onClick={() => onClickEdit(id)}>
+            {edit ? <Text>Save</Text> : <Text>Edit</Text>}
+          </TextButton>
+          <IconButton onClick={() => onRemove(id)}>
+            <HiMinus size="28" />
+          </IconButton>
+        </Wrapper>
       </StyledListItem>
     </>
   );
@@ -53,31 +77,47 @@ const TodoListItem = ({
 
 export default TodoListItem;
 
-const IconButton = styled.button`
-  background: white;
-  outline: 0;
-  color: #777777;
+const TextButton = styled.button`
+  font-family: "SUIT";
+  background-color: white;
+  color: #777;
   border: none;
-  padding: 4px 4px 1px 4px;
-  cursor: pointer;
   border-radius: 4px;
+  padding: 0px 8px;
+  height: 36px;
 
   &:hover {
-    color: black;
+    color: #000;
     border-radius: 4px;
     background-color: #ebebeb;
+    background-clip: border-box;
   }
 
   &:active {
     color: #000;
     background-color: #dddddd;
   }
+
+  &:first-of-type {
+    margin-right: 8px;
+  }
+`;
+
+const Text = styled.div<{ checked?: boolean }>`
+  font-size: 16px;
+  ${(props) =>
+    props.checked &&
+    css`
+      color: #b4b4b4;
+      text-decoration: line-through;
+    `}
 `;
 
 const StyledListItem = styled.li`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 
   &:not(:last-of-type) {
     margin-bottom: 8px;
