@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import TodoListItem from "./TodoListItem";
+import TodoListAddItem from "./TodoListAddItem";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
@@ -69,17 +70,24 @@ const TodoList = () => {
         <Description>Description</Description>
         <Divider />
         <StyledUl>
-          <TodoListItem
-            todo={todos}
-            onChange={onChange}
-            newText={newText}
-            onChangeEditInput={onChangeEditInput}
-            onRemove={onRemove}
-            setNewText={setNewText}
-          />
+          {todos.map((todo) => (
+            <TodoListItem
+              todo={todo}
+              onChange={onChange}
+              newText={newText}
+              onChangeEditInput={onChangeEditInput}
+              onRemove={onRemove}
+              setNewText={setNewText}
+            />
+          ))}
         </StyledUl>
         <Divider />
-        <div>add item here</div>
+        <TodoListAddItem
+          handleChange={handleChange}
+          onCreate={onCreate}
+          text={text}
+          handleKeyDown={handleKeyDown}
+        />
       </ListBox>
     </>
   );
